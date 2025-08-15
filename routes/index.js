@@ -1,18 +1,6 @@
 const express = require('express'),
-  router = express.Router();
-
-const messages = [
-  {
-    text: "Hi there!",
-    user: "Amando",
-    added: new Date()
-  },
-  {
-    text: "Hello World!",
-    user: "Charles",
-    added: new Date()
-  }
-];
+  router = express.Router(),
+  {messages} = require('../db/db');
 
 const options = {
   title: 'Mini Message board',
