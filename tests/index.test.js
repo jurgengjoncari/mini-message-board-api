@@ -1,7 +1,7 @@
 const
   app = require('../app'),
   request = require('supertest'),
-  {messages} = require('../db/db');
+  {messages} = require('../models/db');
 
 test('GET / returns all messages', async () => {
   const res = await request(app).get('/');
@@ -20,8 +20,10 @@ test('POST /new creates a new message', async () => {
       author: 'Test Author'
     });
 
+  const lastMessage = messages[messages.length - 1];
+
   expect(res.statusCode).toBe(302);
   expect(messages.length).toBeGreaterThan(2);
-  expect(messages[messages.length - 1].text).toBe('This is a test message');
-  expect(messages[messages.length - 1].author).toBe('Test Author');
+  expect(lastMessage.text).toBe('This is a test message');
+  expect(lastMessage.author).toBe('Test Author');
 });

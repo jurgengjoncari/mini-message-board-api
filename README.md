@@ -1,4 +1,8 @@
 # Mini Message Board
-Link to the page: https://web-production-7d8e.up.railway.app
+A simple message board application. Link to the page: https://web-production-7d8e.up.railway.app
 
-Added tests with jest. 
+## Technologies Used
+- Built with Express.
+- Tests with jest. 
+- Database with MongoDB and mongoose.
+- Deployed on Railway.

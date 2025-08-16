@@ -1,9 +1,12 @@
+require('mongoose');
 const createError = require('http-errors'),
   express = require('express'),
   path = require('path'),
   cookieParser = require('cookie-parser'),
-  logger = require('morgan'),
-  indexRouter = require('./routes/index');
+  logger = require('morgan');
+
+const indexRouter = require('./routes/index'),
+  userRouter = require('./routes/user');
 
 const app = express();
 
@@ -17,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/users', userRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

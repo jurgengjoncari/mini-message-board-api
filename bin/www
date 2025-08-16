@@ -3,36 +3,39 @@ const
   /**
    * Module dependencies.
    */
-
   app = require('../app'),
   debug = require('debug')('mini-message-board:server'),
   http = require('http'),
-
   /**
    * Get port from environment and store in Express.
    */
+  port = normalizePort(process.env.PORT || '3000'),
+  {MONGO_URI} = process.env,
+  {connectToDB} = require("../config/db");
 
-  port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
-
 const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+(async () => {
+  await connectToDB(MONGO_URI);
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+})();
 
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -52,7 +55,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -80,7 +82,6 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string'

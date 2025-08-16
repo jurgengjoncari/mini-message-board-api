@@ -1,6 +1,6 @@
 const express = require('express'),
   router = express.Router(),
-  {messages} = require('../db/db');
+  {messages} = require('../models/db');
 
 const options = {
   title: 'Mini Message board',
