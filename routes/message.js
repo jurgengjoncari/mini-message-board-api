@@ -1,4 +1,5 @@
 const {Router} = require('express'),
+  authMiddleware = require('../middlewares/auth'),
   {Message} = require('../models/Message');
 
 const messageRouter = Router();
@@ -12,7 +13,7 @@ messageRouter.get('/', async (req, res) => {
   }
 });
 
-messageRouter.post('/', async (req, res) => {
+messageRouter.post('/', authMiddleware, async (req, res) => {
   const {senderId, content} = req.body;
   try {
     const message = await Message.create( {

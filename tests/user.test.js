@@ -1,23 +1,10 @@
-const app = require('../app'),
-  request = require('supertest'),
-  {MongoMemoryServer} = require('mongodb-memory-server'),
-  {connectToDB, disconnectDB} = require('../config/db'),
-  User = require('../models/User');
-
-beforeAll(async () => {
-  global.mongod = await MongoMemoryServer.create();
-  await connectToDB(mongod.getUri());
-})
-
-afterAll(async () => {
-  await disconnectDB();
-  await mongod.stop();
-})
+const User = require('../models/User');
 
 test('POST /user creates a new user', async () => {
   const data = {
     username: 'testuser',
-    email: 'testuser@email.com'
+    email: 'testuser@email.com',
+    password: 'Password123!'
   };
   const res = await request(app)
     .post('/users')
@@ -26,7 +13,7 @@ test('POST /user creates a new user', async () => {
   expect(res.body.username).toBe(data.username);
   expect(res.body.email).toBe(data.email);
   expect(res.body._id).toBeDefined();
-  expect(res.body.creationDate).toBeDefined();
+  expect(res.body.createdAt).toBeDefined();
   const user = await User.findOne({username: data.username});
   expect(user).toBeDefined();
   expect(user.email).toBe(data.email);

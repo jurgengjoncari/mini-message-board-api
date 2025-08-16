@@ -6,6 +6,7 @@ const createError = require('http-errors'),
   logger = require('morgan');
 
 const indexRouter = require('./routes/index'),
+  authRouter = require('./routes/auth'),
   userRouter = require('./routes/user');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/', indexRouter);
 

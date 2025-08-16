@@ -9,20 +9,39 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
+    // required: true,
     unique: true,
     lowercase: true
   },
   password: {
     type: String,
     required: true,
-    minlength: 8
-  },
-  creationDate: {
-    type: Date,
-    default: Date.now,
-    immutable: true
+    minlength: 8,
+    select: false
+  }
+}, {
+  timestamps: true
+});
+
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+      next();
+    }
+    catch (error) {
+      next(error);
+    }
   }
 });
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  }
+  catch (error) {
+    throw new Error(error);
+  }
+}
+
+module.exports = model('User', userSchema);
