@@ -7,6 +7,7 @@ const createError = require('http-errors'),
 
 const indexRouter = require('./routes/index'),
   authRouter = require('./routes/auth'),
+  messageRouter = require('./routes/message'),
   userRouter = require('./routes/user');
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
+app.use('/messages', messageRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

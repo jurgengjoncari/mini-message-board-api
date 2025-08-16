@@ -10,10 +10,11 @@ test('POST /auth/signup', async () => {
     .post('/auth/signup')
     .send(data);
   expect(res.statusCode).toBe(200);
-  expect(res.body.username).toBe(data.username);
-  expect(res.body._id).toBeDefined();
-  expect(res.body.createdAt).toBeDefined();
-  expect(res.body.password).toBeUndefined(); // Password should not be returned
+  expect(res.body.user.username).toBe(data.username);
+  expect(res.body.user._id).toBeDefined();
+  expect(res.body.user.createdAt).toBeDefined();
+  expect(res.body.user.password).toBeUndefined(); // Password should not be returned
+  expect(res.body.token).toBeDefined();
 
   const user = await User.findOne({username: data.username});
   expect(user).toBeDefined();

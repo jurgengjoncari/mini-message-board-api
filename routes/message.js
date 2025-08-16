@@ -1,6 +1,6 @@
 const {Router} = require('express'),
   authMiddleware = require('../middlewares/auth'),
-  {Message} = require('../models/Message');
+  Message = require('../models/Message');
 
 const messageRouter = Router();
 
@@ -14,10 +14,10 @@ messageRouter.get('/', async (req, res) => {
 });
 
 messageRouter.post('/', authMiddleware, async (req, res) => {
-  const {senderId, content} = req.body;
+  const {content} = req.body;
   try {
     const message = await Message.create( {
-      senderId,
+      senderId: req.user._id,
       content
     });
     res.status(201).json(message);
@@ -25,3 +25,5 @@ messageRouter.post('/', authMiddleware, async (req, res) => {
     return res.status(500).json({message: "Error creating message", error});
   }
 });
+
+module.exports = messageRouter;
