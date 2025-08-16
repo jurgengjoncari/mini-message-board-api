@@ -15,12 +15,11 @@ messageRouter.get('/', async (req, res) => {
 messageRouter.post('/', async (req, res) => {
   const {senderId, content} = req.body;
   try {
-    const message = new Message( {
+    const message = await Message.create( {
       senderId,
       content
     });
-    await message.save();
-    res.status(201).json({message});
+    res.status(201).json(message);
   } catch (error) {
     return res.status(500).json({message: "Error creating message", error});
   }

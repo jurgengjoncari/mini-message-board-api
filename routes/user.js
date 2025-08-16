@@ -4,13 +4,13 @@ const {Router} = require('express'),
 const userRouter = Router();
 
 userRouter.post('/', async (req, res) => {
-  const {username, email} = req.body;
+  const {username, email, password} = req.body;
   try {
-    const user = new User({
+    const user = await User.create({
       username,
-      email
+      email,
+      password
     });
-    await user.save();
     res.json(user);
   } catch (error) {
     return res.status(500).json({message: "Error creating user", error});
