@@ -5,10 +5,10 @@ const createError = require('http-errors'),
   cookieParser = require('cookie-parser'),
   logger = require('morgan');
 
-const indexRouter = require('./routes/index'),
-  authRouter = require('./routes/auth'),
-  messageRouter = require('./routes/message'),
-  userRouter = require('./routes/user');
+const indexRoutes = require('./components/index/indexRoutes'),
+  authRoutes = require('./components/auth/authRoutes'),
+  messageRoutes = require('./components/message/messageRoutes'),
+  userRoutes = require('./components/user/userRoutes');
 
 const app = express();
 
@@ -22,10 +22,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/messages', messageRouter);
-app.use('/', indexRouter);
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/messages', messageRoutes);
+app.use('/', indexRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

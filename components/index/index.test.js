@@ -1,7 +1,7 @@
 const
-  app = require('../app'),
+  app = require('../../app'),
   request = require('supertest'),
-  {messages} = require('../models/db');
+  {messages} = require('../../models/db');
 
 test('GET / returns all messages', async () => {
   const res = await request(app).get('/');

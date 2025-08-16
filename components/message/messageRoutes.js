@@ -1,6 +1,6 @@
 const {Router} = require('express'),
-  authMiddleware = require('../middlewares/auth'),
-  Message = require('../models/Message');
+  authMiddleware = require('../../middlewares/auth'),
+  Message = require('./Message');
 
 const messageRouter = Router();
 

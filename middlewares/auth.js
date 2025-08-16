@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken'),
-  User = require('../models/User'),
+  User = require('../components/user/User'),
   {JWT_SECRET} = process.env;
 
 module.exports = async (req, res, next) => {

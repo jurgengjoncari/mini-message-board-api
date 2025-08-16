@@ -1,5 +1,5 @@
-const User = require('../models/User'),
-  Message = require('../models/Message');
+const User = require('../user/User'),
+  Message = require('./Message');
 
 const userData = { username: "alice", password: "hashedpassword" },
   messageData = { content: "Hello world" };

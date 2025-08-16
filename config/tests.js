@@ -1,5 +1,5 @@
 const {MongoMemoryServer} = require('mongodb-memory-server'),
-  {connectToDB, disconnectDB} = require('../config/db');
+  {connectToDB, disconnectDB} = require('./db');
 
 global.app = require('../app');
 global.request = require('supertest');

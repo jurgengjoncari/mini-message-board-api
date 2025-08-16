@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('./User');
 
 test('POST /user creates a new user', async () => {
   const data = {
