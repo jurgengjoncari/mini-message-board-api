@@ -1,15 +1,19 @@
 const express = require('express'),
   router = express.Router(),
-  {messages} = require('../../models/db');
-
-const options = {
-  title: 'Mini Message board',
-  messages: messages
-}
+  Message = require('../message/Message');
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', options);
+router.get('/', async function (req, res) {
+  try {
+    const messages = await Message.find()
+      .sort({createdAt: 1})
+      .populate('senderId', 'username')
+      .exec();
+    res.json(messages);
+  }
+  catch (error) {
+    res.status(500).json({error});
+  }
 });
 
 /* GET form. */

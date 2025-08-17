@@ -3,6 +3,7 @@ const createError = require('http-errors'),
   express = require('express'),
   path = require('path'),
   cookieParser = require('cookie-parser'),
+  cors = require('cors'),
   logger = require('morgan');
 
 const indexRoutes = require('./components/index/indexRoutes'),
@@ -16,6 +17,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
