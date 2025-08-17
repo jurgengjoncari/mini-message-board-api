@@ -1,5 +1,6 @@
 const express = require('express'),
   router = express.Router(),
+  authMiddleware = require("../../middlewares/auth"),
   Message = require('../message/Message');
 
 /* GET home page. */
@@ -16,24 +17,18 @@ router.get('/', async function (req, res) {
   }
 });
 
-/* GET form. */
-router.get('/new', function(req, res) {
-  res.render('form', {title: "Form"});
-});
-
 /*POST request */
-router.post('/new', function (req, res) {
-  const {message: text, author} = req.body;
-
-  const message = {
-    text: text,
-    author: author,
-    added: new Date()
-  };
-
-  messages.push(message);
-
-  res.redirect('/')
-})
+router.post('/', authMiddleware, async function (req, res) {
+  const {content} = req.body;
+  try {
+    const message = await Message.create({
+      senderId: req.user._id,
+      content
+    });
+    res.status(201).json(message);
+  } catch (error) {
+    return res.status(500).json({message: "Error creating message", error});
+  }
+});
 
 module.exports = router;

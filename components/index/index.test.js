@@ -1,5 +1,5 @@
-const User = require("../user/User");
-const Message = require("../message/Message");
+const User = require("../user/User"),
+  Message = require("../message/Message");
 
 const userData = { username: "alice", password: "hashedpassword" },
   messageData = { content: "Hello world" };
@@ -14,25 +14,50 @@ beforeEach(async () => {
   await Message.create(Object.assign(messageData, { senderId: alice._id }));
 });
 
-test.only('GET / returns all messages', async () => {
-  const res = await request(app).get('/');
 
-  expect(res.statusCode).toBe(200);
-  expect(res.body[0].senderId.username).toBe(userData.username);
+test('Unauthenticated users can read messages', async () => {
+  const res = await request(app)
+    .get('/messages')
+    .expect(200);
+
+  expect(res.body).toBeDefined();
+  expect(Array.isArray(res.body)).toBe(true);
+  expect(res.body.length).toBeGreaterThan(0);
+  expect(res.body[0].content).toBe(messageData.content);
+  expect(res.body[0].senderId).toBeDefined();
+  expect(res.body[0].createdAt).toBeDefined();
 });
 
-// test('POST /new creates a new message', async () => {
-//   const res = await request(app)
-//     .post('/new')
-//     .send({
-//       message: 'This is a test message',
-//       author: 'Test Author'
-//     });
-//
-//   const lastMessage = messages[messages.length - 1];
-//
-//   expect(res.statusCode).toBe(302);
-//   expect(messages.length).toBeGreaterThan(2);
-//   expect(lastMessage.text).toBe('This is a test message');
-//   expect(lastMessage.author).toBe('Test Author');
-// });
+test('Unauthenticated users cannot create messages', async () => {
+  // Attempt to create a message without authentication
+  await request(app)
+    .post('/messages')
+    .send(messageData)
+    .expect(401);
+});
+
+test('Authenticated users can create messages', async () => {
+  // First, log in
+  let res = await request(app)
+    .post('/auth/login')
+    .send(userData)
+    .expect(200);
+
+  expect(res.body.token).toBeDefined();
+
+  const token = res.body.token;
+
+  // Now, create a message with the token
+  const messageData = {
+    content: 'This is a test message',
+  };
+
+  res = await request(app)
+    .post('/messages')
+    .set('Authorization', `Bearer ${token}`)
+    .send(messageData)
+    .expect(201);
+
+  expect(res.body.content).toBe(messageData.content);
+  expect(res.body._id).toBeDefined();
+});
