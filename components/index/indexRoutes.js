@@ -21,10 +21,13 @@ router.get('/', async function (req, res) {
 router.post('/', authMiddleware, async function (req, res) {
   const {content} = req.body;
   try {
-    const message = await Message.create({
+    const {id} = await Message.create({
       senderId: req.user._id,
       content
     });
+
+    const message = await Message.findById(id).populate('senderId', 'username');
+
     res.status(201).json(message);
   } catch (error) {
     return res.status(500).json({message: "Error creating message", error});

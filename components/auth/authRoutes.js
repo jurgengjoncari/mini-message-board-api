@@ -31,15 +31,14 @@ authRouter.post('/login', async (req, res) => {
 
 authRouter.post('/signup', async (req, res) => {
   try {
-    const {username, email, password} = req.body;
+    const {username, password} = req.body;
 
     const user = await User.create({
       username,
-      email,
       password
     });
 
-    const token = jwt.sign({userId: user._id}, JWT_SECRET, {expiresIn: '1h'});
+    const token = jwt.sign({userId: user._id}, JWT_SECRET);
 
     user.password = undefined;
 

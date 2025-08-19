@@ -11,5 +11,5 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await disconnectDB();
-  await mongod.stop();
+  await mongod?.stop();
 })

@@ -13,6 +13,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const {userId} = jwt.verify(token, JWT_SECRET);
+
     const user = await User.findById(userId).select(['-password', '-__v']); // Exclude password and version from the user object
 
     if (!user) {
@@ -20,6 +21,7 @@ module.exports = async (req, res, next) => {
     }
 
     req.user = user;
+
     next();
   }
   catch (error) {
