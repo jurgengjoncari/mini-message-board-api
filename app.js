@@ -6,10 +6,10 @@ const createError = require('http-errors'),
   cors = require('cors'),
   logger = require('morgan');
 
-const indexRoutes = require('./components/index/indexRoutes'),
-  authRoutes = require('./components/auth/authRoutes'),
-  messageRoutes = require('./components/message/messageRoutes'),
-  userRoutes = require('./components/user/userRoutes');
+const indexRoutes = require('./components/index/index.routes'),
+  authRoutes = require('./components/auth/auth.routes'),
+  messageRoutes = require('./components/message/message.routes'),
+  userRoutes = require('./components/user/user.routes');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use('/users', userRoutes);
 app.use('/messages', messageRoutes);
 app.use('/', indexRoutes);
 
-// catch 404 and forward to error handler
+// catch 404 and forward to the error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });

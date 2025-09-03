@@ -1,6 +1,6 @@
 const {Router} = require('express'),
   jwt = require('jsonwebtoken'),
-  User = require('../user/User');
+  User = require('../user/user.model');
 
 const {JWT_SECRET} = process.env
 

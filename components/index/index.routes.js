@@ -1,7 +1,7 @@
 const express = require('express'),
   router = express.Router(),
   authMiddleware = require("../../middlewares/auth"),
-  Message = require('../message/Message');
+  Message = require('../message/message.model');
 
 /* GET home page. */
 router.get('/', async function (req, res) {
