@@ -17,11 +17,10 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
+const {ORIGIN} = process.env;
+
 app.use(cors({
-  origin: [
-    "http://localhost:4200",
-    "https://jurgengjoncari.github.io"
-  ],
+  origin: ORIGIN,
   credentials: true
 }));
 app.use(logger('dev'));
