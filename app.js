@@ -39,6 +39,7 @@ app.use(session({
     httpOnly: true
   }
 }));
+console.log(NODE_ENV);
 app.use(passport.initialize());
 app.use(passport.session());
 
