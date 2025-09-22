@@ -18,7 +18,10 @@ const indexRoutes = require('./components/index/index.routes'),
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:4200', // Angular app URL
+  origin: [
+    "http://localhost:4200",
+    "https://jurgengjoncari.github.io"
+  ],
   credentials: true
 }));
 app.use(logger('dev'));
