@@ -11,10 +11,16 @@ authRouter.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
-authRouter.get('/google/callback', passport.authenticate('google', {
-  successRedirect: FRONTEND_URI,
-  failureRedirect: FRONTEND_URI
-}));
+authRouter.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: FRONTEND_URI }),
+  (req, res) => {
+    req.login(req.user, err => {
+      if (err) return res.status(500).json({ error: 'Login failed' });
+
+      res.redirect(FRONTEND_URI);
+    });
+  }
+);
 
 authRouter.get('/me', (req, res) => {
   if (req.user) {
