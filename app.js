@@ -17,7 +17,7 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-const {ORIGIN} = process.env;
+const {ORIGIN, SESSION_SECRET, NODE_ENV} = process.env;
 
 app.use(cors({
   origin: ORIGIN,
@@ -30,9 +30,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  secret: SESSION_SECRET || 'your-secret-key',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: NODE_ENV === "production",
+    sameSite: NODE_ENV === "production" ? "none" : "lax",
+    httpOnly: true
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

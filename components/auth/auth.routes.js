@@ -12,36 +12,27 @@ authRouter.get('/google', passport.authenticate('google', {
 }));
 
 authRouter.get('/google/callback', passport.authenticate('google', {
-  session: false
-}), async ({user}, res) => {
-  try {
-    const {firstName, displayName, email, username, _id, lastName, profilePicture} = user;
-    const token = jwt.sign({
-      userId: _id
-    }, JWT_SECRET, {
-      expiresIn: '1h'
-    });
+  successRedirect: FRONTEND_URI,
+  failureRedirect: FRONTEND_URI
+}));
 
-    const cookieOptions = {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 3600000
-    };
-    res.cookie('jwt', token, cookieOptions);
-    res.cookie('user', JSON.stringify({
-      id: _id,
-      firstName,
-      lastName,
-      email,
-      profilePicture,
-      username,
-      displayName,
-    }), cookieOptions);
-
-    res.redirect(FRONTEND_URI);
-  } catch (error) {
-    return res.status(400).json({error});
+authRouter.get('/me', (req, res) => {
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.json(null);
   }
+});
+
+authRouter.post('/logout', (req, res) => {
+  req.logout({ keepSessionInfo: false }, err => {
+    if (err) return res.status(500).json({ error: 'Failed to logout' });
+    req.session.destroy(err => {
+      if (err) return res.status(500).json({ error: 'Failed to destroy session' });
+      res.clearCookie('connect.sid', { path: '/' });
+      res.status(200).json({ message: 'Logged out successfully' });
+    });
+  });
 });
 
 authRouter.post('/login', async (req, res) => {
