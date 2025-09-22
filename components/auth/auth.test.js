@@ -29,3 +29,11 @@ test('POST /auth/login', async () => {
   expect(typeof res.body.token).toBe('string');
   expect(res.body.token.length).toBeGreaterThan(0);
 });
+
+
+test('GET /auth/google redirects to Google', async () => {
+  const res = await request(app)
+    .get('/auth/google');
+  expect(res.status).toBe(302); // Should redirect to Google
+  expect(res.header.location).toMatch(/^https:\/\/accounts\.google\.com/);
+});

@@ -4,7 +4,11 @@ const createError = require('http-errors'),
   path = require('path'),
   cookieParser = require('cookie-parser'),
   cors = require('cors'),
-  logger = require('morgan');
+  logger = require('morgan'),
+  session = require('express-session'),
+  passport = require('passport');
+
+require('./components/auth/passport.config');
 
 const indexRoutes = require('./components/index/index.routes'),
   authRoutes = require('./components/auth/auth.routes'),
@@ -13,12 +17,23 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200', // Angular app URL
+  credentials: true
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);

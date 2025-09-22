@@ -8,7 +8,7 @@ router.get('/', async function (req, res) {
   try {
     const messages = await Message.find()
       .sort({createdAt: 1})
-      .populate('senderId', 'username')
+      .populate('senderId')
       .exec();
     res.json(messages);
   }
@@ -26,7 +26,7 @@ router.post('/', authMiddleware, async function (req, res) {
       content
     });
 
-    const message = await Message.findById(id).populate('senderId', 'username');
+    const message = await Message.findById(id).populate('senderId');
 
     res.status(201).json(message);
   } catch (error) {
