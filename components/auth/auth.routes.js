@@ -3,7 +3,7 @@ const {Router} = require('express'),
   passport = require('passport'),
   User = require('../user/user.model');
 
-const {JWT_SECRET, ORIGIN} = process.env
+const {JWT_SECRET, FRONTEND_URI} = process.env
 
 const authRouter = Router();
 
@@ -38,7 +38,7 @@ authRouter.get('/google/callback', passport.authenticate('google', {
       displayName,
     }), cookieOptions);
 
-    res.redirect(ORIGIN);
+    res.redirect(FRONTEND_URI);
   } catch (error) {
     return res.status(400).json({error});
   }
