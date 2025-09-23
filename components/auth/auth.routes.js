@@ -33,31 +33,10 @@ authRouter.get('/me', (req, res) => {
   }
 });
 
-authRouter.post('/logout', (req, res) => {
-  req.logout(err => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to logout' });
-    }
-
-    const cookieOptions = {
-      path: '/',
-      httpOnly: true,
-      secure: NODE_ENV === 'production',
-      sameSite: NODE_ENV === 'production' ? 'none' : 'lax'
-    };
-
-    if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
-      cookieOptions.domain = BACKEND_HOSTNAME;
-    }
-
-    res.clearCookie('connect.sid', cookieOptions);
-
-    req.session.destroy(err => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to destroy session' });
-      }
-      res.status(200).json({ message: 'Logged out successfully' });
-    });
+authRouter.post('/logout', (req, res, next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    console.log(res);
   });
 });
 
