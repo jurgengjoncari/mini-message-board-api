@@ -40,14 +40,7 @@ authRouter.post('/logout', (req, res, next) => {
     }
     req.session.destroy((err) => {
       if (err) return res.status(500).json({ message: 'Could not log out user', error: err });
-      // Options must match the cookie's original settings
-      res.clearCookie('connect.sid', {
-        path: '/',
-        secure: true,
-        sameSite: 'none',
-        httpOnly: true,
-        domain: 'web-production-7d8e.up.railway.app'
-      });
+      res.cookie('connect.sid', '',{ expires: new Date(0) });
       res.status(200).json({ message: 'Logged out successfully' });
     });
   });

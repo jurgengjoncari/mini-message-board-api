@@ -44,11 +44,8 @@ app.use(session({
     collectionName: 'sessions'
   }),
   cookie: {
-    sameSite: 'none',
-    secure: true,
-    path: '/',
-    httpOnly: true,
-    domain: 'web-production-7d8e.up.railway.app'
+    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: NODE_ENV === 'production',
   }
 }));
 
