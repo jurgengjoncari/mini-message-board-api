@@ -44,8 +44,12 @@ authRouter.post('/logout', (req, res) => {
         return res.status(500).json({ error: 'Failed to destroy session' });
       }
 
+      // Cookie options must match the options used to set the cookie
       const cookieOptions = {
-        path: '/'
+        path: '/',
+        httpOnly: true,
+        secure: NODE_ENV === 'production',
+        sameSite: NODE_ENV === 'production' ? 'none' : 'lax'
       };
 
       if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
