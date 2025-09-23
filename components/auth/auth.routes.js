@@ -39,24 +39,23 @@ authRouter.post('/logout', (req, res) => {
       return res.status(500).json({ error: 'Failed to logout' });
     }
 
+    const cookieOptions = {
+      path: '/',
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: NODE_ENV === 'production' ? 'none' : 'lax'
+    };
+
+    if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
+      cookieOptions.domain = BACKEND_HOSTNAME;
+    }
+
+    res.clearCookie('connect.sid', cookieOptions);
+
     req.session.destroy(err => {
       if (err) {
         return res.status(500).json({ error: 'Failed to destroy session' });
       }
-
-      // Cookie options must match the options used to set the cookie
-      const cookieOptions = {
-        path: '/',
-        httpOnly: true,
-        secure: NODE_ENV === 'production',
-        sameSite: NODE_ENV === 'production' ? 'none' : 'lax'
-      };
-
-      if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
-        cookieOptions.domain = BACKEND_HOSTNAME;
-      }
-
-      res.clearCookie('connect.sid', cookieOptions);
       res.status(200).json({ message: 'Logged out successfully' });
     });
   });
