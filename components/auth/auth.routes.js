@@ -3,7 +3,7 @@ const {Router} = require('express'),
   passport = require('passport'),
   User = require('../user/user.model');
 
-const {JWT_SECRET, FRONTEND_URI} = process.env
+const {JWT_SECRET, FRONTEND_URI, NODE_ENV, BACKEND_HOSTNAME} = process.env
 
 const authRouter = Router();
 
@@ -34,11 +34,25 @@ authRouter.get('/me', (req, res) => {
 });
 
 authRouter.post('/logout', (req, res) => {
-  req.logout({ keepSessionInfo: false }, err => {
-    if (err) return res.status(500).json({ error: 'Failed to logout' });
+  req.logout(err => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to logout' });
+    }
+
     req.session.destroy(err => {
-      if (err) return res.status(500).json({ error: 'Failed to destroy session' });
-      res.clearCookie('connect.sid', { path: '/' });
+      if (err) {
+        return res.status(500).json({ error: 'Failed to destroy session' });
+      }
+
+      const cookieOptions = {
+        path: '/'
+      };
+
+      if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
+        cookieOptions.domain = BACKEND_HOSTNAME;
+      }
+
+      res.clearCookie('connect.sid', cookieOptions);
       res.status(200).json({ message: 'Logged out successfully' });
     });
   });
