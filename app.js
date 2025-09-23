@@ -42,7 +42,11 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: MONGO_URI,
     collectionName: 'sessions'
-  })
+  }),
+  cookie: {
+    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: NODE_ENV === 'production',
+  }
 }));
 
 app.use(passport.initialize());
