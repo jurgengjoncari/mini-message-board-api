@@ -17,7 +17,12 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-const {ORIGIN, SESSION_SECRET, NODE_ENV} = process.env;
+const { ORIGIN, SESSION_SECRET, NODE_ENV, BACKEND_HOSTNAME } = process.env;
+
+// Trust the first proxy in production
+if (NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 
 app.use(cors({
   origin: ORIGIN,
@@ -29,16 +34,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
+// Session configuration
+const sessionConfig = {
   secret: SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: NODE_ENV === "production",
-    sameSite: NODE_ENV === "production" ? "none" : "lax",
-    httpOnly: true
+    httpOnly: true,
+    secure: NODE_ENV === 'production',
+    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
   }
-}));
+};
+
+// Set cookie domain in production
+if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
+  sessionConfig.cookie.domain = BACKEND_HOSTNAME;
+}
+
+app.use(session(sessionConfig));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
