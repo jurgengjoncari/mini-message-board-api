@@ -43,10 +43,10 @@ authRouter.post('/logout', (req, res, next) => {
       // Options must match the cookie's original settings
       res.clearCookie('connect.sid', {
         path: '/',
-        secure: NODE_ENV === 'production',
-        sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-        httpOnly: NODE_ENV === 'production',
-        domain: BACKEND_HOSTNAME
+        secure: true,
+        sameSite: 'none',
+        httpOnly: true,
+        domain: 'web-production-7d8e.up.railway.app'
       });
       res.status(200).json({ message: 'Logged out successfully' });
     });
