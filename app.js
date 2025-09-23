@@ -6,7 +6,8 @@ const createError = require('http-errors'),
   cors = require('cors'),
   logger = require('morgan'),
   session = require('express-session'),
-  passport = require('passport');
+  passport = require('passport'),
+  MongoStore = require('connect-mongo');
 
 require('./components/auth/passport.config');
 
@@ -17,7 +18,7 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-const { ORIGIN, SESSION_SECRET, NODE_ENV } = process.env;
+const { ORIGIN, SESSION_SECRET, NODE_ENV, BACKEND_HOSTNAME, MONGO_URI } = process.env;
 
 // Trust the first proxy in production
 if (NODE_ENV === 'production') {
@@ -35,16 +36,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration
-app.use(session({
+const sessionConfig = {
   secret: SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: MONGO_URI,
+    collectionName: 'sessions'
+  }),
   cookie: {
     httpOnly: true,
     secure: NODE_ENV === 'production',
     sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
   }
-}));
+};
+
+// Set cookie domain in production
+if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
+  sessionConfig.cookie.domain = BACKEND_HOSTNAME;
+}
+
+app.use(session(sessionConfig));
 
 app.use(passport.initialize());
 app.use(passport.session());
