@@ -3,10 +3,16 @@ const jwt = require('jsonwebtoken'),
   {JWT_SECRET} = process.env;
 
 module.exports = async (req, res, next) => {
+  // 1. Check for an active session (from Google login)
+  if (req.isAuthenticated() && req.user) {
+    return next();
+  }
+
+  // 2. If no session, check for a JWT token (from local login)
   const {authorization} = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res.status(401).json({error: "Authorization header is missing"});
+    return res.status(401).json({error: "User is not authenticated or Authorization header is missing"});
   }
 
   const token = authorization.split(' ')[1];
@@ -14,7 +20,7 @@ module.exports = async (req, res, next) => {
   try {
     const {userId} = jwt.verify(token, JWT_SECRET);
 
-    const user = await User.findById(userId).select(['-password', '-__v']); // Exclude password and version from the user object
+    const user = await User.findById(userId).select(['-password', '-__v']);
 
     if (!user) {
       return res.status(401).json({error: "User not found"});
