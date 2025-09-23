@@ -45,7 +45,8 @@ authRouter.post('/logout', (req, res, next) => {
         path: '/',
         secure: NODE_ENV === 'production',
         sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-        httpOnly: NODE_ENV === 'production'
+        httpOnly: NODE_ENV === 'production',
+        domain: BACKEND_HOSTNAME
       });
       res.status(200).json({ message: 'Logged out successfully' });
     });
