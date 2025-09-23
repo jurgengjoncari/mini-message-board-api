@@ -35,28 +35,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session configuration
-const sessionConfig = {
+app.use(session({
   secret: SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: MONGO_URI,
     collectionName: 'sessions'
-  }),
-  cookie: {
-    httpOnly: true,
-    secure: NODE_ENV === 'production',
-    sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-  }
-};
-
-// Set cookie domain in production
-if (NODE_ENV === 'production' && BACKEND_HOSTNAME) {
-  sessionConfig.cookie.domain = BACKEND_HOSTNAME;
-}
-
-app.use(session(sessionConfig));
+  })
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
