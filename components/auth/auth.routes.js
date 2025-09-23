@@ -34,9 +34,15 @@ authRouter.get('/me', (req, res) => {
 });
 
 authRouter.post('/logout', (req, res, next) => {
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    res.status(200).json({ message: 'Logged out successfully' });
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    req.session.destroy((err) => {
+      if (err) return res.status(500).json({ message: 'Could not log out user', error: err });
+      res.clearCookie('connect.sid'); // The name of the cookie set by express-session
+      res.status(200).json({ message: 'Logged out successfully' });
+    });
   });
 });
 
