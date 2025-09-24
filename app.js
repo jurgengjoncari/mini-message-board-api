@@ -45,7 +45,7 @@ app.use(session({
   }),
   cookie: {
     sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: NODE_ENV === 'production',
+    secure: NODE_ENV === 'production'
   }
 }));
 
