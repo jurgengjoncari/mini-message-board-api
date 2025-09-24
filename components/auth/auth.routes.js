@@ -1,22 +1,11 @@
 const {Router} = require('express'),
   jwt = require('jsonwebtoken'),
   passport = require('passport'),
-  cors = require('cors'),
   User = require('../user/user.model');
 
-const {JWT_SECRET, FRONTEND_URI, NODE_ENV, ORIGIN} = process.env
-
-// Define CORS options for routes within this router
-const corsOptions = {
-  origin: ORIGIN,
-  credentials: true,
-  optionsSuccessStatus: 204
-};
+const { JWT_SECRET, FRONTEND_URI, NODE_ENV} = process.env
 
 const authRouter = Router();
-
-// Apply CORS to all routes that need it
-authRouter.use(cors(corsOptions));
 
 authRouter.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
@@ -37,21 +26,7 @@ authRouter.get('/me', (req, res) => {
   }
 });
 
-// Manually handle the OPTIONS preflight request for the logout route
-// This gives us full control and avoids potential caching issues with the `cors` middleware's Vary header.
-// We use a separate router here to ensure this OPTIONS handler runs BEFORE the general cors middleware above.
-const logoutRouter = Router();
-logoutRouter.options('/logout', (req, res) => {
-  // Set the necessary CORS headers for the preflight response
-  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  // Respond with 204 No Content, which is the standard for preflight requests
-  res.status(204).end();
-});
-
-logoutRouter.post('/logout', (req, res, next) => {
+authRouter.get('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
@@ -69,9 +44,6 @@ logoutRouter.post('/logout', (req, res, next) => {
     });
   });
 });
-
-// Mount the logout router which has its own special CORS handling
-authRouter.use(logoutRouter);
 
 authRouter.post('/login', async (req, res) => {
   try {
