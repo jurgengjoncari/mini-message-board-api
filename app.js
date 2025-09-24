@@ -28,7 +28,6 @@ if (NODE_ENV === 'production') {
 app.use(cors({
   origin: ORIGIN,
   credentials: true,
-  preflightContinue: true,
   optionsSuccessStatus: 204
 }));
 app.use(logger('dev'));
