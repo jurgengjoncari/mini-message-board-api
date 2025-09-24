@@ -25,13 +25,6 @@ if (NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
-// Define routes BEFORE global middleware like cors and parsers
-// This allows routes to have their own specific middleware (like the manual OPTIONS handler)
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/messages', messageRoutes);
-app.use('/', indexRoutes);
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -57,17 +50,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('session'));
 
-// catch 404 and forward to the error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
 // Apply CORS as a final step before the error handler
 app.use(cors({
   origin: ORIGIN,
   credentials: true,
   optionsSuccessStatus: 204
 }));
+
+// Define routes AFTER session and passport middleware
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/messages', messageRoutes);
+app.use('/', indexRoutes);
+
+// catch 404 and forward to the error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
 // error handler
 app.use(function(err, req, res) {
