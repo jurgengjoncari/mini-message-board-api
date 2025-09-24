@@ -11,19 +11,12 @@ authRouter.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
-authRouter.get('/google/callback', (req, res, next) => {
-  passport.authenticate('google', { failureRedirect: FRONTEND_URI }, (err, user) => {
-    if (err || !user) return res.redirect(FRONTEND_URI);
-
-    // Log in the user and set the session cookie
-    req.login(user, (err) => {
-      if (err) return res.status(500).json({ error: 'Login failed' });
-
-      // Redirect to frontend after session is set
-      res.redirect(FRONTEND_URI);
-    });
-  })(req, res, next);
-});
+authRouter.get('/google/callback', passport.authenticate('google', {
+    failureRedirect: FRONTEND_URI,
+    session: true
+  }), (req, res) => {
+    res.redirect(FRONTEND_URI);
+  });
 
 authRouter.get('/me', (req, res) => {
   if (req.user) {

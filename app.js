@@ -27,7 +27,8 @@ if (NODE_ENV === 'production') {
 
 app.use(cors({
   origin: ORIGIN,
-  credentials: true
+  credentials: true,
+  preflightContinue: true
 }));
 app.use(logger('dev'));
 app.use(express.json());
