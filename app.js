@@ -28,7 +28,8 @@ if (NODE_ENV === 'production') {
 app.use(cors({
   origin: ORIGIN,
   credentials: true,
-  preflightContinue: true
+  preflightContinue: true,
+  optionsSuccessStatus: 204
 }));
 app.use(logger('dev'));
 app.use(express.json());
@@ -46,7 +47,8 @@ app.use(session({
   }),
   cookie: {
     sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: NODE_ENV === 'production'
+    secure: NODE_ENV === 'production',
+    proxy: NODE_ENV === 'production' ? true : undefined
   }
 }));
 
