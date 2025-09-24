@@ -18,7 +18,7 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-const { ORIGIN, SESSION_SECRET, NODE_ENV, BACKEND_HOSTNAME, MONGO_URI } = process.env;
+const { ORIGIN, SESSION_SECRET, NODE_ENV, MONGO_URI } = process.env;
 
 // Trust the first proxy in production
 if (NODE_ENV === 'production') {
@@ -70,13 +70,10 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err.stack : undefined
+  });
 });
 
 module.exports = app;
