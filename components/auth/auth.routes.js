@@ -26,6 +26,18 @@ authRouter.get('/me', (req, res) => {
   }
 });
 
+// Manually handle the OPTIONS preflight request for the logout route
+// This gives us full control and avoids potential caching issues with the `cors` middleware's Vary header.
+authRouter.options('/logout', (req, res) => {
+  // Set the necessary CORS headers for the preflight response
+  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN);
+  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  // Respond with 204 No Content, which is the standard for preflight requests
+  res.status(204).end();
+});
+
 authRouter.post('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) {
