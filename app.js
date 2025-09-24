@@ -50,21 +50,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('session'));
 
-// Define CORS options to be reused
-const corsOptions = {
+// Apply CORS globally to all routes
+app.use(cors({
   origin: ORIGIN,
   credentials: true,
   optionsSuccessStatus: 204
-};
+}));
 
-// The auth router is special. It contains a manual OPTIONS handler that MUST run
-// before any global CORS middleware to prevent caching issues on logout.
+// Define routes AFTER all core middleware
 app.use('/auth', authRoutes);
-
-// Apply CORS to the rest of the routes
-app.use('/users', cors(corsOptions), userRoutes);
-app.use('/messages', cors(corsOptions), messageRoutes);
-app.use('/', cors(corsOptions), indexRoutes);
+app.use('/users', userRoutes);
+app.use('/messages', messageRoutes);
+app.use('/', indexRoutes);
 
 // catch 404 and forward to the error handler
 app.use(function(req, res, next) {
