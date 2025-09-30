@@ -1,5 +1,5 @@
 {
-  "name": "mini-message-board",
+  "name": "mini-message-board-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
