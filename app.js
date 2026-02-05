@@ -18,7 +18,12 @@ const indexRoutes = require('./components/index/index.routes'),
 
 const app = express();
 
-const { ORIGIN, SESSION_SECRET, NODE_ENV, MONGO_URI } = process.env;
+const {
+  ORIGIN = 'http://localhost:4200',
+  SESSION_SECRET,
+  NODE_ENV,
+  MONGO_URI = 'mongodb://localhost:27017'
+} = process.env;
 
 // Trust the first proxy in production
 if (NODE_ENV === 'production') {
