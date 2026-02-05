@@ -3,7 +3,10 @@ const {Router} = require('express'),
   passport = require('passport'),
   User = require('../user/user.model');
 
-const { JWT_SECRET, FRONTEND_URI} = process.env
+const {
+  JWT_SECRET = 'local_fallback_secret', 
+  FRONTEND_URI
+} = process.env
 
 const authRouter = Router();
 

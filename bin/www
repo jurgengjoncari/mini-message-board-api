@@ -10,7 +10,7 @@ const
    * Get port from environment and store in Express.
    */
   port = normalizePort(process.env.PORT || '3000'),
-  {MONGO_URI} = process.env,
+  {MONGO_URI = 'mongodb://localhost:27017'} = process.env,
   {connectToDB} = require("../config/db");
 
 app.set('port', port);
