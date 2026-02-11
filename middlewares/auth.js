@@ -1,8 +1,9 @@
-const jwt = require('jsonwebtoken'),
-  User = require('../components/user/user.model'),
-  {JWT_SECRET} = process.env;
+import jwt from 'jsonwebtoken';
+import User from '../components/user/user.model.js';
 
-module.exports = async (req, res, next) => {
+const {JWT_SECRET} = process.env;
+
+export default async (req, res, next) => {
   // 1. Check for an active session (from Google login)
   if (req.isAuthenticated() && req.user) {
     return next();

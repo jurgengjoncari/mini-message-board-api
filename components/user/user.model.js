@@ -1,5 +1,5 @@
-const {Schema, model} = require('mongoose'),
-  bcrypt = require('bcrypt');
+import {Schema, model} from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new Schema({
   firstName: String,
@@ -63,4 +63,4 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   }
 }
 
-module.exports = model('User', userSchema);
+export default model('User', userSchema);

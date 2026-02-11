@@ -1,5 +1,5 @@
-const {Router} = require('express'),
-  User = require('./user.model');
+import {Router} from 'express';
+import User from './user.model.js';
 
 const userRouter = Router();
 
@@ -31,4 +31,4 @@ userRouter.delete('/:userId', async (req, res) => {
   }
 });
 
-module.exports = userRouter;
+export default userRouter;

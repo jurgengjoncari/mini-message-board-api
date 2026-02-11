@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 let db, client;
 
-module.exports = {
+export {
   connectToDB,
   disconnectDB
 };

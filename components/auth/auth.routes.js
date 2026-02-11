@@ -1,7 +1,7 @@
-const {Router} = require('express'),
-  jwt = require('jsonwebtoken'),
-  passport = require('passport'),
-  User = require('../user/user.model');
+import {Router} from 'express';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import User from '../user/user.model.js';
 
 const {
   JWT_SECRET = 'local_fallback_secret', 
@@ -81,4 +81,4 @@ authRouter.post('/signup', async (req, res) => {
   }
 });
 
-module.exports = authRouter;
+export default authRouter;

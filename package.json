@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www",
     "test": "jest --runInBand"
   },
+  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",

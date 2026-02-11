@@ -1,20 +1,23 @@
-require('mongoose');
-const createError = require('http-errors'),
-  express = require('express'),
-  path = require('path'),
-  cookieParser = require('cookie-parser'),
-  cors = require('cors'),
-  logger = require('morgan'),
-  session = require('express-session'),
-  passport = require('passport'),
-  MongoStore = require('connect-mongo');
+import 'mongoose';
 
-require('./components/auth/passport.config');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import {fileURLToPath} from 'url';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import logger from 'morgan';
+import session from 'express-session';
+import passport from 'passport';
+import MongoStore from 'connect-mongo';
 
-const indexRoutes = require('./components/index/index.routes'),
-  authRoutes = require('./components/auth/auth.routes'),
-  messageRoutes = require('./components/message/message.routes'),
-  userRoutes = require('./components/user/user.routes');
+import './components/auth/passport.config.js';
+
+// Routes
+import indexRoutes from './components/index/index.routes.js';
+import authRoutes from './components/auth/auth.routes.js';
+import messageRoutes from './components/message/message.routes.js';
+import userRoutes from './components/user/user.routes.js';
 
 const app = express();
 
@@ -34,6 +37,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
@@ -75,10 +79,13 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res) {
+  console.error(`[${new Date().toISOString()}] Error on ${req.method} ${req.url}`);
+  console.error(err.stack || err);
+
   res.status(err.status || 500).json({
     message: err.message,
     error: req.app.get('env') === 'development' ? err.stack : undefined
   });
 });
 
-module.exports = app;
+export default app;

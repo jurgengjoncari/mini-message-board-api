@@ -1,7 +1,8 @@
-const express = require('express'),
-  router = express.Router(),
-  authMiddleware = require("../../middlewares/auth"),
-  Message = require('../message/message.model');
+import express from 'express';
+import authMiddleware from '../../middlewares/auth.js';
+import Message from '../message/message.model.js';
+
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', async function (req, res) {
@@ -34,4 +35,4 @@ router.post('/', authMiddleware, async function (req, res) {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const {Router} = require('express'),
-  authMiddleware = require('../../middlewares/auth'),
-  Message = require('./message.model');
+import {Router} from 'express';
+import authMiddleware from '../../middlewares/auth.js';
+import Message from './message.model.js';
 
 const messageRouter = Router();
 
@@ -26,4 +26,4 @@ messageRouter.post('/', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = messageRouter;
+export default messageRouter;

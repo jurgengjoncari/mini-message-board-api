@@ -1,17 +1,20 @@
 #!/usr/bin/env node
-const
-  /**
-   * Module dependencies.
-   */
-  app = require('../app'),
-  debug = require('debug')('mini-message-board:server'),
-  http = require('http'),
-  /**
-   * Get port from environment and store in Express.
-   */
-  port = normalizePort(process.env.PORT || '3000'),
-  {MONGO_URI = 'mongodb://localhost:27017'} = process.env,
-  {connectToDB} = require("../config/db");
+
+/**
+ * Module dependencies.
+ */
+import app from '../app.js';
+import debugLib from 'debug';
+import http from 'http';
+import { connectToDB } from '../config/db.js';
+
+const debug = debugLib('mini-message-board:server');
+
+/**
+ * Get port from environment and store in Express.
+ */
+const port = normalizePort(process.env.PORT || '3000'),
+  {MONGO_URI = 'mongodb://localhost:27017'} = process.env;
 
 app.set('port', port);
 
