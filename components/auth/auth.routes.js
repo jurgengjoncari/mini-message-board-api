@@ -5,16 +5,26 @@ import User from '../user/user.model.js';
 
 const {
   JWT_SECRET = 'local_fallback_secret', 
-  FRONTEND_URI
+  FRONTEND_URI,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_CALLBACK_URL
 } = process.env
 
 const authRouter = Router();
 
-authRouter.get('/google', passport.authenticate('google', {
+function requireGoogleOAuth(req, res, next) {
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL || !FRONTEND_URI) {
+    return res.status(503).json({message: 'Google OAuth is not configured'});
+  }
+  next();
+}
+
+authRouter.get('/google', requireGoogleOAuth, passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
-authRouter.get('/google/callback', passport.authenticate('google', {
+authRouter.get('/google/callback', requireGoogleOAuth, passport.authenticate('google', {
     failureRedirect: FRONTEND_URI,
     session: true
   }), (req, res) => {
